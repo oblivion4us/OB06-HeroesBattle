@@ -98,3 +98,50 @@ class Enemy_Orc(Enemy):
         else:
             hero.health = 0
             print(f"{hero.name} погиб!")
+
+# Класс битвы
+class Battle:
+    def __init__(self, hero, enemies):
+        self.hero = hero
+        self.enemies = enemies
+
+    def start(self):
+        current_turn = random.choice(["hero", "enemies"])
+
+        while True:
+            if current_turn == "hero":
+                print("\nХод героя!")
+                time.sleep(1)  # Задержка перед следующим сообщением
+                for enemy in self.enemies:
+                    if not enemy.check_health():
+                        self.hero.attack(enemy)
+                        break
+
+                if all(enemy.check_health() for enemy in self.enemies):
+                    print("Вы победили всех врагов!")
+                    break
+
+                current_turn = "enemies"
+
+            else:
+                print("\nХод врагов!")
+                time.sleep(1)  # Задержка перед следующим сообщением
+
+                for enemy in self.enemies:
+                    if not enemy.check_health():
+                        enemy.enemy_attack(self.hero)
+                        break
+
+                if self.hero.check_health():
+                    print("Вы проиграли")
+                    break
+
+                current_turn = "hero"
+
+#Создание объектов и запуск битвы
+wizard1 = Wizard("Волшебник Меркурий", 100, "magical", MagicalWeapon("Посох Янтаря", 18, 25))
+orc1 = Enemy_Orc("Орк1", 70, 15, 20)
+orc2 = Enemy_Orc("Орк2", 60, 10, 15)
+
+battle = Battle(wizard1, [orc1])
+battle.start()
