@@ -67,3 +67,34 @@ class Warrior(Hero):
     def set_ability(self):
         print(f"{self.name} имеет аспект {self.ability}. Его физический урон увеличен на 50%!")
         time.sleep(1)  # Задержка перед следующим сообщением
+
+# Классы врагов
+class Enemy(ABC):
+    def __init__(self, name, health, min_damage, max_damage):
+        self.name = name
+        self.health = health
+        self.min_damage = min_damage
+        self.max_damage = max_damage
+
+    @abstractmethod
+    def enemy_attack(self, hero):
+        pass
+
+    def check_health(self):
+        if self.health <= 0:
+            return True
+        return False
+
+class Enemy_Orc(Enemy):
+    def enemy_attack(self, hero):
+        if self.health <= 0:
+            return
+        damage = random.randint(self.min_damage, self.max_damage)
+        print(f"{self.name} атакует {hero.name} и наносит ему {damage:.1f} урона")
+        time.sleep(1)  # Задержка перед следующим сообщением
+        hero.health -= damage
+        if hero.health > 0:
+            print(f"У {hero.name} осталось {hero.health:.1f} кол-ва здоровья")
+        else:
+            hero.health = 0
+            print(f"{hero.name} погиб!")
